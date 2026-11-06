@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gen Chem I · Chapter 7 — Quantum Theory and the Electronic Structure of Atoms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eef3f2; --card:#fdfefe; --ink:#15323a; --ink-soft:#4c656d; --ink-faint:#7d9198;
+    --line:#d6e2df; --line-strong:#b7ccc7;
+    --cupric:#17708c; --cupric-deep:#0d5063; --phenol:#ce2e7a;
+    --correct:#1f875c; --correct-bg:#e6f3ec; --wrong:#b23a2e; --wrong-bg:#f7e8e5;
+    --amber:#a9660f; --amber-bg:#f8efdf; --r:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:radial-gradient(130% 70% at 100% 0%, #f5f9f8 0%, var(--paper) 60%) fixed;
+    color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+  .chem{font-family:"IBM Plex Mono",monospace;font-size:.94em}
+  .mn{font-size:.72em;vertical-align:.42em;font-family:"IBM Plex Mono",monospace}
+
+  .top{display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.6);backdrop-filter:blur(6px);flex:none}
+  .brand{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--cupric-deep);white-space:nowrap}
+  .brand b{color:var(--ink)}
+  .track{flex:1;height:6px;border-radius:999px;background:#e3ebe9;overflow:hidden;border:1px solid var(--line)}
+  .track .fill{height:100%;width:5%;background:var(--cupric);transition:width .4s,background-color .4s}
+  .tools{display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .count{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft)}
+  .tbtn{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;border:1px solid var(--line-strong);background:#fff;color:var(--ink-soft);padding:6px 10px;border-radius:8px;cursor:pointer}
+  .tbtn:hover{border-color:var(--cupric);color:var(--cupric-deep)}
+
+  .stage{flex:1;display:block;padding:22px 18px;overflow-y:auto;overflow-x:hidden}
+  .slide{display:none;flex-direction:column;width:100%;max-width:940px;margin:0 auto;min-height:60vh;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 0 rgba(21,50,58,.04),0 24px 60px -34px rgba(21,50,58,.5);padding:36px clamp(22px,4vw,50px)}
+  .slide.active{display:flex;animation:in .4s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--cupric-deep);font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .kicker .pill{background:#eef4f6;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--ink-soft);letter-spacing:.05em}
+  .kicker .dot{width:5px;height:5px;border-radius:50%;background:var(--phenol)}
+  h2.title{font-family:"IBM Plex Serif",serif;font-weight:600;font-size:clamp(1.6rem,3.8vw,2.5rem);line-height:1.06;margin:.3em 0 .5em;letter-spacing:-.01em}
+  h2.title em{font-style:italic;color:var(--cupric)}
+  .slide p{font-size:1.04rem;line-height:1.6;color:var(--ink-soft);margin:.2em 0 .8em}
+  .slide p strong{color:var(--ink);font-weight:600}
+  .big{font-family:"IBM Plex Serif",serif;font-size:clamp(1.2rem,2.5vw,1.55rem);color:var(--ink);line-height:1.3;font-weight:500}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:6px 0 4px}
+  .cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:6px 0 4px}
+  @media(max-width:640px){.cols,.cols3{grid-template-columns:1fr}}
+  .box{border:1px solid var(--line-strong);border-radius:12px;padding:14px 16px;background:#fff}
+  .box h4{margin:0 0 6px;font-size:.8rem;font-family:"IBM Plex Mono",monospace;letter-spacing:.07em;text-transform:uppercase;color:var(--cupric-deep)}
+  .box.alt h4{color:var(--phenol)}
+  .slide ul{margin:.3em 0 .2em;padding-left:1.15em}
+  .slide li{margin:.3em 0;color:var(--ink-soft);line-height:1.5}
+  .slide li b{color:var(--ink)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:#eef4f6;border:1px solid var(--line);border-radius:8px;padding:6px 11px;color:var(--ink-soft)}
+  .chip b{color:var(--ink)}
+  .agenda{list-style:none;padding:0;margin:8px 0}
+  .agenda li{display:flex;justify-content:space-between;gap:14px;border-bottom:1px dashed var(--line);padding:8px 2px;color:var(--ink)}
+  .agenda li span:last-child{font-family:"IBM Plex Mono",monospace;color:var(--ink-faint);font-size:.9em}
+  .eq{font-family:"IBM Plex Mono",monospace;font-size:1.05rem;color:var(--ink);background:#f4f8f8;border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:inline-block;margin:4px 0}
+  .consts{font-family:"IBM Plex Mono",monospace;font-size:.86rem;color:var(--ink-soft);background:#f4f8f8;border:1px dashed var(--line-strong);border-radius:10px;padding:9px 12px;margin:6px 0}
+
+  .fig{margin:12px 0 6px;display:flex;flex-direction:column;align-items:center}
+  .fig svg{max-width:100%;height:auto}
+  .cap{font-size:.85rem;color:var(--ink-faint);margin-top:7px;text-align:center;max-width:62ch}
+
+  .frag:not(.shown){display:none}
+  .frag.shown{animation:pop .34s ease both}
+  @keyframes pop{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  .wstep{border:1px solid var(--line-strong);border-radius:12px;padding:13px 16px;margin:10px 0;background:#fff}
+  .wstep .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--cupric-deep);font-weight:600}
+  .wstep .work{font-family:"IBM Plex Mono",monospace;font-size:1.0rem;color:var(--ink);margin:6px 0 2px;line-height:1.5}
+  .wstep.final{border-color:var(--phenol);background:#fdf3f8}
+  .wstep.final .lab{color:var(--phenol)}
+  .hintline{font-size:.9rem;color:var(--ink-faint);margin-top:4px}
+
+  .q-item{border-top:1px solid var(--line);padding:15px 0 6px}
+  .q-item:first-child{border-top:0}
+  .q-text{font-size:1.02rem;color:var(--ink);margin:0 0 9px;line-height:1.5}
+  .q-num{font-family:"IBM Plex Mono",monospace;color:var(--cupric-deep);font-weight:600;margin-right:6px}
+  .q-opts{display:grid;gap:7px;margin-bottom:9px}
+  .q-opt{text-align:left;border:1px solid var(--line-strong);background:#fff;border-radius:10px;padding:9px 13px;font:inherit;font-size:.97rem;color:var(--ink);cursor:pointer;transition:.15s}
+  .q-opt:hover{border-color:var(--cupric)}
+  .q-opt.pick{border-color:var(--cupric);background:#f0f7f8}
+  .q-opt:disabled{cursor:default;opacity:.9}
+  .q-numrow{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+  .q-numrow input{font-family:"IBM Plex Mono",monospace;font-size:1.04rem;padding:10px 13px;border:1px solid var(--line-strong);border-radius:10px;width:210px;max-width:100%;color:var(--ink)}
+  .q-numrow input:focus-visible{outline:2px solid var(--cupric);outline-offset:1px;border-color:var(--cupric)}
+  .q-numrow input:disabled{background:#f4f7f6}
+  .q-unit{display:flex;align-items:center;padding:0 12px;border-radius:10px;background:#eef3f2;border:1px solid var(--line);font-family:"IBM Plex Mono",monospace;font-size:.9rem;color:var(--ink-soft)}
+  .q-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .btn{border:1px solid var(--cupric);background:var(--cupric);color:#fff;padding:9px 16px;border-radius:9px;font:inherit;font-weight:600;font-size:.9rem;cursor:pointer}
+  .btn:hover{background:var(--cupric-deep)}
+  .btn:disabled{opacity:.55;cursor:default}
+  .btn.pink{border-color:var(--phenol);background:var(--phenol)}
+  .btn.pink:hover{background:#a91f60}
+  .link{background:none;border:0;color:var(--ink-faint);font-size:.84rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 2px}
+  .link:hover{color:var(--ink-soft)}
+  .q-fb{margin:9px 0 2px;padding:10px 13px;border-radius:9px;font-size:.93rem;display:none;line-height:1.5}
+  .q-fb.show{display:block;animation:pop .3s ease both}
+  .q-fb.ok{background:var(--correct-bg);color:#12452f}
+  .q-fb.no{background:var(--wrong-bg);color:#6e241b}
+  .q-fb.hint{background:var(--amber-bg);color:#5c3a06}
+  .q-fb .kk{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:2px}
+  .q-fb.ok .kk{color:var(--correct)} .q-fb.no .kk{color:var(--wrong)} .q-fb.hint .kk{color:var(--amber)}
+  button:focus-visible{outline:2px solid var(--cupric);outline-offset:2px}
+
+  .challenge-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card);border:1px solid var(--line-strong);border-radius:12px;padding:11px 15px;margin:4px 0 10px}
+  .challenge-bar .prog{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink)}
+  .challenge-bar .mini{height:8px;width:150px;max-width:38vw;border-radius:999px;background:#e3ebe9;overflow:hidden;border:1px solid var(--line)}
+  .challenge-bar .mini > i{display:block;height:100%;width:0;background:var(--cupric);transition:width .4s,background-color .4s}
+  .gate{margin-top:14px;padding:16px 18px;border-radius:12px;border:1px dashed var(--line-strong);background:#fbfcfc;text-align:center;color:var(--ink-soft)}
+  .gate.ready{border-style:solid;border-color:var(--phenol);background:#fdf3f8}
+
+  .takeaways{list-style:none;padding:0;margin:6px 0}
+  .takeaways li{display:flex;gap:11px;padding:8px 0;border-bottom:1px solid var(--line);color:var(--ink)}
+  .takeaways li::before{content:"\25c9";color:var(--phenol);font-size:.8em;margin-top:.35em}
+
+  .pass{border:1px solid var(--line-strong);border-radius:16px;overflow:hidden;background:#fff;margin:6px 0 12px}
+  .pass .head{background:linear-gradient(120deg,var(--cupric-deep),var(--cupric));color:#fff;padding:18px 22px}
+  .pass .head .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+  .pass .head .big{color:#fff;margin-top:3px}
+  .pass .body{padding:18px 22px}
+  .pass .row{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.98rem}
+  .pass .row .lab{color:var(--ink-faint);font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em}
+  .pass .row .val{color:var(--ink);font-weight:600;text-align:right}
+  .pass .code{font-family:"IBM Plex Mono",monospace;letter-spacing:.14em;color:var(--phenol)}
+  .namewrap{display:flex;gap:9px;flex-wrap:wrap;margin:6px 0 12px}
+  .namewrap input{font:inherit;font-size:1rem;padding:10px 13px;border:1px solid var(--line-strong);border-radius:10px;width:260px;max-width:100%;color:var(--ink)}
+  .namewrap input:focus-visible{outline:2px solid var(--cupric);outline-offset:1px;border-color:var(--cupric)}
+  .note{font-size:.9rem;color:var(--ink-faint)}
+
+  .bottom{display:flex;align-items:center;gap:16px;padding:12px 18px;border-top:1px solid var(--line);background:rgba(255,255,255,.6);backdrop-filter:blur(6px);flex:none}
+  .nav{display:flex;gap:8px}
+  .navbtn{width:42px;height:42px;border-radius:11px;border:1px solid var(--line-strong);background:#fff;color:var(--ink);font-size:1.1rem;cursor:pointer;display:grid;place-items:center}
+  .navbtn:hover{border-color:var(--cupric);color:var(--cupric-deep)}
+  .navbtn:disabled{opacity:.35;cursor:default}
+  .slidemeta{flex:1;min-width:0}
+  .slidemeta .st{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint)}
+  .slidemeta .sn{font-family:"IBM Plex Serif",serif;font-size:1.02rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .help{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-faint);text-align:right;white-space:nowrap}
+  @media(max-width:640px){.help{display:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">Duquesne <b>Gen Chem I</b> · Ch 7</div>
+  <div class="track"><div class="fill" id="pfill"></div></div>
+  <div class="tools">
+    <span class="count" id="counter">1 / 19</span>
+    <button class="tbtn" id="reroll" title="Load a fresh set of numbers">&#8635; New numbers</button>
+    <button class="tbtn" id="fsBtn" title="Fullscreen">Full</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide" data-st="Open" data-name="Title">
+    <div class="kicker">Duquesne University <span class="dot"></span> General Chemistry I <span class="dot"></span> Electronic Structure</div>
+    <h2 class="title">Quantum Theory &amp; the <em>Electronic Structure of Atoms</em></h2>
+    <p class="big">Light behaves as both a wave and a stream of particles, and electrons live in quantized energy levels and orbitals described by quantum numbers.</p>
+    <p>Chapter 7 &middot; Burdge &amp; Overby, <span style="font-style:italic">Chemistry</span> (5th ed.)</p>
+    <p class="note">This chapter is calculation-heavy. Work through in order — the 10-question challenge at the end is genuinely hard. Every problem draws fresh numbers each visit; press <b>&#8635; New numbers</b> anytime. Enter scientific notation like <span class="chem">6.6e-19</span>.</p>
+  </section>
+
+  <!-- 2 ROADMAP -->
+  <section class="slide" data-st="Roadmap" data-name="What this chapter covers">
+    <div class="kicker">The whole chapter, in order</div>
+    <h2 class="title">From light to electron configurations</h2>
+    <ul class="agenda">
+      <li><span>7.1 · Electromagnetic radiation &amp; the nature of matter</span><span>§7.1</span></li>
+      <li><span>7.3 · Bohr's theory of the hydrogen atom</span><span>§7.3</span></li>
+      <li><span>7.5 · The quantum mechanical model of the atom</span><span>§7.5</span></li>
+      <li><span>7.6 · Quantum numbers</span><span>§7.6</span></li>
+      <li><span>7.7 · Orbital shapes &amp; electron spin</span><span>§7.7</span></li>
+      <li><span>7.8&#8211;7.9 · Electron configurations &amp; orbital diagrams</span><span>§7.8&#8211;7.9</span></li>
+    </ul>
+    <div class="consts">Constants: c = 3.00&#215;10&#8312; m/s · h = 6.626&#215;10&#8315;&#179;&#8308; J&#183;s · E&#8345; = &#8722;2.18&#215;10&#8315;&#185;&#8312; J / n&#178; · R&#8336; = 1.097&#215;10&#8311; m&#8315;&#185; · N&#8336; = 6.022&#215;10&#178;&#179;</div>
+  </section>
+
+  <!-- 3 ELECTROMAGNETIC RADIATION -->
+  <section class="slide" data-st="Summary · §7.1" data-name="Electromagnetic radiation">
+    <div class="kicker">Electromagnetic radiation <span class="pill">§7.1</span></div>
+    <h2 class="title">A wave with two linked rulers</h2>
+    <div class="fig" id="waveFig"></div>
+    <p><b>Wavelength</b> (&#955;, distance between crests) and <b>frequency</b> (&#957;, cycles per second, Hz) are tied by the speed of light:</p>
+    <p><span class="eq">c = &#955;&#957; = 3.00&#215;10&#8312; m/s</span></p>
+    <p>Long wavelength means low frequency. The visible band (about 400&#8211;700 nm) is a sliver of the full electromagnetic spectrum.</p>
+  </section>
+
+  <!-- 4 PRACTICE light -->
+  <section class="slide" data-st="Your turn · §7.1" data-name="Practice: wavelength & frequency">
+    <div class="kicker">Your turn</div>
+    <h2 class="title">Convert &#955; &#8596; &#957;</h2>
+    <div id="pracLight"></div>
+  </section>
+
+  <!-- 5 NATURE OF MATTER -->
+  <section class="slide" data-st="Summary · §7.1" data-name="The nature of matter">
+    <div class="kicker">The nature of matter <span class="pill">§7.1</span></div>
+    <h2 class="title">Light comes in packets</h2>
+    <p><strong>Planck:</strong> energy is absorbed or released by atoms only in discrete amounts called <b>quanta</b>. The energy and frequency of radiation are linked by</p>
+    <p><span class="eq">E = h&#957;,&nbsp;&nbsp; h = 6.626&#215;10&#8315;&#179;&#8308; J&#183;s</span></p>
+    <p><strong>Einstein:</strong> electromagnetic radiation is itself quantized — a stream of &ldquo;particles&rdquo; called <b>photons</b>. The energy of one photon is</p>
+    <p><span class="eq">E<sub>photon</sub> = h&#957; = hc/&#955;</span></p>
+    <p>So light has a <b>dual nature</b>: it shows both wavelike and particle-like properties.</p>
+  </section>
+
+  <!-- 6 PRACTICE photon -->
+  <section class="slide" data-st="Your turn · §7.1" data-name="Practice: photon energy">
+    <div class="kicker">Your turn</div>
+    <h2 class="title">Energy of a photon</h2>
+    <div id="pracPhoton"></div>
+  </section>
+
+  <!-- 7 BOHR -->
+  <section class="slide" data-st="Summary · §7.3" data-name="Bohr's hydrogen atom">
+    <div class="kicker">Bohr's theory of the hydrogen atom <span class="pill">§7.3</span></div>
+    <h2 class="title">Quantized energy levels</h2>
+    <div class="fig" id="bohrFig"></div>
+    <p>White light gives a <b>continuous spectrum</b>, but an excited gas emits only a <b>line spectrum</b> &mdash; proof that the electron's energy is <b>quantized</b>. The allowed levels have energy</p>
+    <p><span class="eq">E&#8345; = &#8722;2.18&#215;10&#8315;&#185;&#8312; J &#215; (1/n&#178;)</span></p>
+    <p>A jump between levels absorbs or emits a photon of energy <span class="chem">|&#916;E| = 2.18&#215;10&#8315;&#185;&#8312; J &#215; |1/n<sub>f</sub>&#178; &#8722; 1/n<sub>i</sub>&#178;|</span>. The same idea in wavelength form is the <b>Rydberg equation</b>, <span class="chem">1/&#955; = R&#8336;(1/n&#8321;&#178; &#8722; 1/n&#8322;&#178;)</span>. The <b>ground state</b> is n = 1; any higher level is an <b>excited state</b>, and n = &#8734; (zero energy) is ionization. Bohr's model works only for one-electron atoms like hydrogen.</p>
+  </section>
+
+  <!-- 8 PRACTICE bohr -->
+  <section class="slide" data-st="Your turn · §7.3" data-name="Practice: Bohr transitions">
+    <div class="kicker">Your turn</div>
+    <h2 class="title">Levels and line spectra</h2>
+    <div id="pracBohr"></div>
+  </section>
+
+  <!-- 9 QUANTUM MECHANICS -->
+  <section class="slide" data-st="Summary · §7.5" data-name="The quantum mechanical model">
+    <div class="kicker">The quantum mechanical model of the atom <span class="pill">§7.5</span></div>
+    <h2 class="title">Orbitals, not orbits</h2>
+    <div class="fig" id="qmFig"></div>
+    <p>Schr&#246;dinger's equation contains both wave and particle terms. Solving it gives a <b>wavefunction</b> &#968;. Its square, <span class="chem">&#968;&#178;</span>, gives the <b>probability</b> of finding the electron at a point (the electron density). A specific wavefunction is called an <b>orbital</b> &mdash; and an orbital is <em>not</em> an orbit: it describes a distribution of electron density, not a path.</p>
+  </section>
+
+  <!-- 10 QUANTUM NUMBERS -->
+  <section class="slide" data-st="Summary · §7.6" data-name="Quantum numbers">
+    <div class="kicker">Quantum numbers <span class="pill">§7.6</span></div>
+    <h2 class="title">Numbers that name every electron</h2>
+    <div class="fig" id="qnFig"></div>
+    <p>Schr&#246;dinger's equation requires <b>three</b> quantum numbers to describe an orbital:</p>
+    <div class="cols3">
+      <div class="box"><h4>n (principal)</h4><p style="margin:0;font-size:.9rem">1, 2, 3 … &mdash; shell; size and energy. Larger n is farther from the nucleus.</p></div>
+      <div class="box"><h4>&#8467; (angular)</h4><p style="margin:0;font-size:.9rem">0 … n&#8722;1 &mdash; subshell shape: 0=s, 1=p, 2=d, 3=f.</p></div>
+      <div class="box alt"><h4>m&#8343; (magnetic)</h4><p style="margin:0;font-size:.9rem">&#8722;&#8467; … +&#8467; &mdash; orientation; a subshell has 2&#8467;+1 orbitals.</p></div>
+    </div>
+    <p>A fourth number, the <b>spin</b> m&#8347; = &#177;&#189;, is added with the Pauli principle (&sect;7.7). A shell n holds <b>n&#178; orbitals</b> and <b>2n&#178; electrons</b>; a subshell holds <b>2&#8467;+1 orbitals</b> and <b>2(2&#8467;+1) electrons</b>.</p>
+  </section>
+
+  <!-- 11 PRACTICE qn -->
+  <section class="slide" data-st="Your turn · §7.6" data-name="Practice: quantum numbers">
+    <div class="kicker">Your turn</div>
+    <h2 class="title">Count orbitals &amp; electrons</h2>
+    <div id="pracQN"></div>
+  </section>
+
+  <!-- 12 ORBITALS -->
+  <section class="slide" data-st="Summary · §7.7" data-name="Orbital shapes &amp; electron spin">
+    <div class="kicker">Orbital shapes and energies <span class="pill">§7.7</span></div>
+    <h2 class="title">Shapes of the subshells</h2>
+    <div class="fig" id="orbFig"></div>
+    <p>Each subshell has a characteristic shape: <b>s</b> is spherical (1 orbital), <b>p</b> is a dumbbell (3 orbitals, start at n=2), <b>d</b> is mostly cloverleaf (5 orbitals, start at n=3), <b>f</b> is more complex (7 orbitals). Higher <b>n</b> means larger orbitals with more <b>nodes</b> (a node is where &#968;&#178; = 0; an s orbital has n&#8722;1 of them).</p>
+    <p><b>Electron spin &amp; the Pauli principle:</b> an electron also has a spin quantum number <b>m&#8347; = &#177;&#189;</b>. The <b>Pauli exclusion principle</b> says no two electrons in an atom can share all four quantum numbers &mdash; so each orbital holds at most <b>two</b> electrons, and they must have opposite spins.</p>
+  </section>
+
+  <!-- 13 ELECTRON CONFIG -->
+  <section class="slide" data-st="Summary · §7.8&#8211;7.9" data-name="Electron configuration">
+    <div class="kicker">Electron configurations &amp; orbital diagrams <span class="pill">§7.8&#8211;7.9</span></div>
+    <h2 class="title">Three rules fill the orbitals</h2>
+    <div class="fig" id="aufFig"></div>
+    <div class="cols3">
+      <div class="box"><h4>Pauli</h4><p style="margin:0;font-size:.9rem">Max 2 electrons per orbital, with opposite spins.</p></div>
+      <div class="box"><h4>Aufbau</h4><p style="margin:0;font-size:.9rem">Fill lowest-energy orbitals first (follow the diagonal).</p></div>
+      <div class="box alt"><h4>Hund</h4><p style="margin:0;font-size:.9rem">Singly fill degenerate orbitals before pairing.</p></div>
+    </div>
+    <p>Watch the anomalies: <span class="chem">Cr = [Ar]3d&#8309;4s&#185;</span> and <span class="chem">Cu = [Ar]3d&#185;&#8304;4s&#185;</span> — a half-filled or filled d subshell is extra stable.</p>
+    <p>For an <b>ion</b>, start from the neutral atom: anions add electrons by Aufbau, while cations lose them from the <b>highest-n shell first</b>. For a transition metal that means the <b>4s electrons leave before any 3d</b> — so Fe ([Ar]3d&#8310;4s&#178;) becomes Fe&#178;&#8314; = [Ar]3d&#8310;, not [Ar]3d&#8308;4s&#178;.</p>
+  </section>
+
+  <!-- 14 PRACTICE config -->
+  <section class="slide" data-st="Your turn · §7.8&#8211;7.9" data-name="Practice: electron configuration">
+    <div class="kicker">Your turn</div>
+    <h2 class="title">Valence, unpaired, block</h2>
+    <div id="pracConfig"></div>
+  </section>
+
+  <!-- 15 CONFIG & PT -->
+  <section class="slide" data-st="Summary · §7.8&#8211;7.9" data-name="Configurations &amp; periodic table">
+    <div class="kicker">Configurations, blocks &amp; valence electrons <span class="pill">§7.8&#8211;7.9</span></div>
+    <h2 class="title">The table is a filling map</h2>
+    <div class="fig" id="ptFig"></div>
+    <p>The periodic table is organized by the subshell being filled: groups 1&#8211;2 are the <b>s-block</b>, 13&#8211;18 the <b>p-block</b>, 3&#8211;12 the <b>d-block</b> (transition metals), and the bottom rows the <b>f-block</b>. An element's position gives its configuration directly.</p>
+    <p><b>Core electrons</b> are the inner [noble-gas] electrons; <b>valence electrons</b> are those outside the noble-gas core and drive bonding. Elements in the same group share the same valence configuration &mdash; for p-block elements the d electrons are core, but for transition metals the d electrons count as valence.</p>
+  </section>
+
+  <!-- 19 WORKED EXAMPLE -->
+  <section class="slide" data-st="Worked example" data-name="A hydrogen emission line">
+    <div class="kicker">Worked together <span class="pill">press &rarr; to build each step</span></div>
+    <h2 class="title">Wavelength of an emission line</h2>
+    <p id="workedProblem"></p>
+    <div id="workedSteps"></div>
+  </section>
+
+  <!-- 20 CHALLENGE INTRO -->
+  <section class="slide" id="sChallenge" data-st="Challenge" data-name="End-of-chapter challenge">
+    <div class="kicker">End-of-chapter challenge <span class="pill">10 questions · hard</span></div>
+    <h2 class="title">Finished early? Prove it.</h2>
+    <p>Ten demanding, multi-step problems spanning the whole chapter — counting photons from a laser pulse, the series limit of a hydrogen series, the energy of a mole of photons, finding the final level of a Bohr transition from its wavelength, spotting an impossible set of quantum numbers, counting electrons under an m<sub>l</sub> constraint, unpaired electrons in a transition-metal <b>ion</b>, identifying an element from its configuration, an ionization threshold frequency, and an absorption-wavelength capstone.</p>
+    <ul class="takeaways">
+      <li>Solve all ten to unlock your completion pass.</li>
+      <li>Numbers are unique to this visit; enter scientific notation like <span class="chem">8.6e5</span>.</li>
+      <li>When the pass appears, screenshot it and hand it in.</li>
+    </ul>
+    <p class="note">Move to the next slide to begin.</p>
+  </section>
+
+  <!-- 21 CHALLENGE -->
+  <section class="slide" data-st="Challenge · 1–10" data-name="The 10 questions">
+    <div class="kicker">The challenge</div>
+    <div class="challenge-bar">
+      <span class="prog" id="chProg">0 / 10 solved</span>
+      <span class="mini"><i id="chMini"></i></span>
+    </div>
+    <div id="challengeList"></div>
+    <div class="gate" id="chGate">Solve all ten to unlock your completion pass.</div>
+  </section>
+
+  <!-- 22 COMPLETION -->
+  <section class="slide" id="sComplete" data-st="Completion" data-name="Completion pass">
+    <div class="kicker">Completion pass</div>
+    <h2 class="title" id="compTitle">Finish the challenge to unlock this</h2>
+    <div id="compLocked"><p>Head back to the challenge and solve all ten questions. Your pass builds itself the moment the last one turns green.</p></div>
+    <div id="compReady" hidden>
+      <p>Enter your name, then screenshot the pass below and hand it to your instructor.</p>
+      <div class="namewrap"><input id="compName" type="text" placeholder="Your full name" aria-label="Your full name"><button class="btn" id="compGen">Build my pass</button></div>
+      <div id="passWrap"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="bottom">
+  <div class="nav">
+    <button class="navbtn" id="prev" aria-label="Previous">&#8249;</button>
+    <button class="navbtn" id="next" aria-label="Next">&#8250;</button>
+  </div>
+  <div class="slidemeta"><div class="st" id="mst"></div><div class="sn" id="msn"></div></div>
+  <div class="help">&larr; &rarr; move &middot; &#8635; new numbers &middot; screenshot the pass to finish</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // ---------- seeded RNG ----------
+  var seed=(Math.floor(Math.random()*2147483647)^(Date.now()&0xffff))>>>0;
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var rng=mulberry32(seed);
+  function ri(a,b){return Math.floor(rng()*(b-a+1))+a;}
+  function pick(arr){return arr[Math.floor(rng()*arr.length)];}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function roundSig(x,n){if(x===0)return 0;var d=Math.ceil(Math.log10(Math.abs(x)));var p=n-d;var m=Math.pow(10,p);return Math.round(x*m)/m;}
+  var SUP={"-":"\u207b","0":"\u2070","1":"\u00b9","2":"\u00b2","3":"\u00b3","4":"\u2074","5":"\u2075","6":"\u2076","7":"\u2077","8":"\u2078","9":"\u2079"};
+  function sup(n){return String(n).split("").map(function(c){return SUP[c]||c;}).join("");}
+  function sci(x,n){n=n||3;if(x===0)return "0";var neg=x<0;x=Math.abs(x);var e=Math.floor(Math.log10(x));var m=x/Math.pow(10,e);m=Number(m.toFixed(n-1));if(m>=10){m/=10;e++;}return (neg?"\u2212":"")+m+"\u00d710"+sup(e);}
+  function num(x,n){n=n||3;var r=roundSig(x,n);var a=Math.abs(r);if(a!==0&&(a<1e-3||a>=1e6))return sci(r,n);return String(r);}
+
+  // ---------- constants ----------
+  var c=3.00e8, h=6.626e-34, hc=h*c, Ry=2.18e-18, me=9.109e-31, NA=6.022e23, PI=Math.PI, eV=1.602e-19;
+
+  // ---------- element data ----------
+  var ZS=["","H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr"];
+  var ORDER=[[1,0],[2,0],[2,1],[3,0],[3,1],[4,0],[3,2],[4,1],[5,0],[4,2],[5,1],[6,0],[4,3],[5,2],[6,1],[7,0],[5,3],[6,2],[7,1]];
+  var LNAME=["s","p","d","f"];
+  var EXC={24:[[3,2,5],[4,0,1]],29:[[3,2,10],[4,0,1]]}; // Cr, Cu overrides (n,l,e)
+  function aufbau(Z){
+    var occ=[],rem=Z;
+    for(var i=0;i<ORDER.length&&rem>0;i++){var n=ORDER[i][0],l=ORDER[i][1],cap=2*(2*l+1);var e=Math.min(rem,cap);occ.push({n:n,l:l,e:e});rem-=e;}
+    if(EXC[Z]){ // rebuild the two affected subshells
+      EXC[Z].forEach(function(o){var found=false;occ.forEach(function(s){if(s.n===o[0]&&s.l===o[1]){s.e=o[2];found=true;}});if(!found)occ.push({n:o[0],l:o[1],e:o[2]});});
+    }
+    return occ;
+  }
+  function lastAufbauL(Z){var l=0,cnt=0;for(var i=0;i<ORDER.length;i++){var cap=2*(2*ORDER[i][1]+1);cnt+=cap;l=ORDER[i][1];if(cnt>=Z)break;}return l;}
+  function unpaired(occ){var u=0;occ.forEach(function(s){var orb=2*s.l+1;u+=(s.e<=orb)?s.e:(2*orb-s.e);});return u;}
+  function maxN(occ){var m=0;occ.forEach(function(s){if(s.e>0&&s.n>m)m=s.n;});return m;}
+  function valence(occ){var mn=maxN(occ);var v=0;occ.forEach(function(s){if(s.n===mn&&(s.l===0||s.l===1))v+=s.e;});return v;}
+  function blockOf(Z){return LNAME[lastAufbauL(Z)];}
+  function pElectrons(occ){var p=0;occ.forEach(function(s){if(s.l===1)p+=s.e;});return p;}
+  var CORE={2:"He",10:"Ne",18:"Ar",36:"Kr"};
+  function cationOcc(Z,q){var occ=aufbau(Z).map(function(s){return {n:s.n,l:s.l,e:s.e};});var rem=q;
+    while(rem>0){var bi=-1;occ.forEach(function(s,i){if(s.e>0){if(bi<0||s.n>occ[bi].n||(s.n===occ[bi].n&&s.l>occ[bi].l))bi=i;}});occ[bi].e--;rem--;}
+    return occ;}
+  function configCondensed(Z){
+    var occ=aufbau(Z).filter(function(s){return s.e>0;}).map(function(s){return {n:s.n,l:s.l,e:s.e};});
+    occ.sort(function(a,b){return a.n-b.n||a.l-b.l;});
+    var coreZ=0;[2,10,18,36].forEach(function(z){if(z<=Z-1)coreZ=z;});
+    var acc=0,rest=[];for(var i=0;i<occ.length;i++){if(acc<coreZ)acc+=occ[i].e;else rest.push(occ[i]);}
+    return (coreZ?"["+CORE[coreZ]+"] ":"")+rest.map(function(s){return s.n+LNAME[s.l]+"^"+s.e;}).join(" ");}
+
+  // ---------- generic question builder ----------
+  function makeQuestion(container,spec,opts){
+    opts=opts||{};var allowShow=opts.allowShow!==false;
+    var el=document.createElement("div");el.className="q-item";
+    var inner="<p class='q-text'>"+spec.q+"</p>";
+    if(spec.kind==="mc"){inner+="<div class='q-opts'>"+spec.options.map(function(o){return "<button class='q-opt'>"+o+"</button>";}).join("")+"</div>";}
+    else{inner+="<div class='q-numrow'><input type='text' inputmode='text' autocomplete='off' placeholder='answer' aria-label='answer'>"+(spec.unit?"<div class='q-unit'>"+spec.unit+"</div>":"")+"</div>";}
+    inner+="<div class='q-actions'><button class='btn q-check'>Check</button>"+(allowShow?"<button class='link q-show' hidden>Show answer</button>":"")+"</div>"+
+           "<div class='q-fb'><span class='kk'></span><span class='tt'></span></div>";
+    el.innerHTML=inner;container.appendChild(el);
+    var check=el.querySelector(".q-check"),show=el.querySelector(".q-show"),fb=el.querySelector(".q-fb");
+    var kk=fb.querySelector(".kk"),tt=fb.querySelector(".tt");
+    var attempts=0,done=false,picked=-1;
+    if(spec.kind==="mc"){var op=Array.prototype.slice.call(el.querySelectorAll(".q-opt"));
+      op.forEach(function(o,idx){o.addEventListener("click",function(){if(done)return;op.forEach(function(x){x.classList.remove("pick");});o.classList.add("pick");picked=idx;});});}
+    else{el.querySelector("input").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();check.click();}});}
+    function lock(ok){done=true;check.disabled=true;check.textContent=ok?"Correct \u2713":"Answer";if(show)show.hidden=true;
+      el.querySelectorAll("input,.q-opt").forEach(function(x){x.disabled=true;});
+      fb.className="q-fb show ok";kk.textContent=ok?"Correct":"Answer";tt.innerHTML=spec.explain;if(opts.onSolved)opts.onSolved(ok);}
+    check.addEventListener("click",function(){if(done)return;var ok=false,answered=true;
+      if(spec.kind==="mc"){if(picked<0)answered=false;else ok=(picked===spec.correct);}
+      else{var raw=el.querySelector("input").value.trim().toLowerCase().replace(/,/g,"").replace(/\s+/g,"").replace(/\u00d710\^?/g,"e").replace(/x10\^?/g,"e").replace(/\u2212/g,"-");
+        var m=raw.match(/-?\d*\.?\d+(e-?\d+)?/);var v=m?parseFloat(m[0]):NaN;
+        if(isNaN(v))answered=false;else ok=Math.abs(v-spec.answer)<=spec.tol;}
+      if(!answered){fb.className="q-fb show no";kk.textContent="Wait";tt.textContent=spec.kind==="mc"?"Pick an option first.":"Enter a number first.";return;}
+      if(ok){lock(true);return;}
+      attempts++;
+      if(attempts>=2&&spec.hint){fb.className="q-fb show hint";kk.textContent="Hint";tt.innerHTML=spec.hint;}
+      else{fb.className="q-fb show no";kk.textContent="Not yet";tt.textContent="Not quite \u2014 rework it and check again.";}
+      if(allowShow&&attempts>=2&&show)show.hidden=false;});
+    if(show)show.addEventListener("click",function(){if(done)return;lock(false);});
+  }
+
+  // ---------- specs ----------
+  // light: c = lambda*nu
+  function lightSpec(mode){
+    if(mode==="l2n"){var lam=ri(200,750);var lm=lam*1e-9;var nu=c/lm;
+      return {kind:"num",q:"Light has a wavelength of <b class='chem'>"+lam+" nm</b>. What is its frequency (Hz)?",answer:roundSig(nu,3),tol:roundSig(nu,3)*0.02,unit:"Hz",
+        explain:"&#957; = c/&#955; = (3.00\u00d710\u2078)/("+lam+"\u00d710\u207b\u2079 m) = <b>"+sci(nu)+" Hz</b>.",hint:"Convert nm to m (\u00d710\u207b\u2079), then &#957; = c/&#955;. Enter like "+sci(nu)+" \u2192 e.g. 6.0e14."};}
+    var nu2=ri(40,90)/10*1e14;var lm2=c/nu2;var lamnm=lm2*1e9;
+    return {kind:"num",q:"A photon has frequency <b class='chem'>"+sci(nu2)+" Hz</b>. What is its wavelength (nm)?",answer:roundSig(lamnm,3),tol:roundSig(lamnm,3)*0.02,unit:"nm",
+      explain:"&#955; = c/&#957; = (3.00\u00d710\u2078)/("+sci(nu2)+") = "+sci(lm2)+" m = <b>"+num(lamnm)+" nm</b>.",hint:"&#955; = c/&#957; gives metres; \u00d710\u2079 for nm."};
+  }
+  // photon energy
+  function photonSpec(mode){
+    var lam=ri(180,700);var lm=lam*1e-9;var E=hc/lm;
+    if(mode==="mol"){var perMol=E*NA/1000;
+      return {kind:"num",q:"Find the energy of <b>one mole</b> of photons of wavelength <b class='chem'>"+lam+" nm</b> (kJ/mol).",answer:roundSig(perMol,3),tol:roundSig(perMol,3)*0.02,unit:"kJ/mol",
+        explain:"E = hc/&#955; = "+sci(E)+" J per photon; \u00d7 N&#8336; \u00f7 1000 = <b>"+num(perMol)+" kJ/mol</b>.",hint:"Photon energy hc/&#955; (J), then \u00d76.022\u00d710\u00b2\u00b3, then \u00f71000 for kJ."};}
+    return {kind:"num",q:"What is the energy of a single photon of wavelength <b class='chem'>"+lam+" nm</b> (J)?",answer:roundSig(E,3),tol:roundSig(E,3)*0.025,unit:"J",
+      explain:"E = hc/&#955; = (6.626\u00d710\u207b\u00b3\u2074\u00d73.00\u00d710\u2078)/("+lam+"\u00d710\u207b\u2079) = <b>"+sci(E)+" J</b>.",hint:"E = hc/&#955;. Convert nm to m first. Enter like "+sci(E)+" \u2192 e.g. 3.0e-19."};
+  }
+  // Bohr
+  function bohrEnergy(n){var E=-Ry/(n*n);
+    return {kind:"num",q:"What is the energy (J) of the <b>n = "+n+"</b> level of a hydrogen atom?",answer:roundSig(E,3),tol:Math.abs(roundSig(E,3))*0.02,unit:"J",
+      explain:"E&#8345; = &#8722;2.18\u00d710\u207b\u00b9\u2078/n&#178; = &#8722;2.18\u00d710\u207b\u00b9\u2078/"+(n*n)+" = <b>"+sci(E)+" J</b>.",hint:"E&#8345; = &#8722;2.18\u00d710\u207b\u00b9\u2078 \u00f7 n\u00b2. Answer is negative; enter like -2.4e-19."};}
+  function bohrTransition(ni,nf){var dE=Ry*(1/(nf*nf)-1/(ni*ni));var lam=hc/dE*1e9;
+    return {kind:"num",q:"An electron falls from <b>n = "+ni+"</b> to <b>n = "+nf+"</b> in hydrogen. What wavelength (nm) is emitted?",answer:roundSig(lam,3),tol:roundSig(lam,3)*0.02,unit:"nm",
+      explain:"|&#916;E| = 2.18\u00d710\u207b\u00b9\u2078(1/"+(nf*nf)+" &#8722; 1/"+(ni*ni)+") = "+sci(dE)+" J; &#955; = hc/|&#916;E| = <b>"+num(lam)+" nm</b>.",hint:"|&#916;E| = 2.18\u00d710\u207b\u00b9\u2078|1/n_f\u00b2 \u2212 1/n_i\u00b2|, then &#955; = hc/|&#916;E|, \u00d710\u2079 for nm."};}
+  // reverse Bohr: given emitted wavelength and n_i, find n_f
+  function bohrReverseSpec(){var ni=pick([4,5,6]);var nf=pick([1,2,3].filter(function(x){return x<ni;}));var dE=Ry*(1/(nf*nf)-1/(ni*ni));var lam=Math.round(hc/dE*1e9);
+    return {kind:"num",q:"An electron in the <b>n = "+ni+"</b> level of a hydrogen atom emits a photon of wavelength <b class='chem'>"+lam+" nm</b>. To what level <b>n</b> does the electron fall?",answer:nf,tol:0.45,unit:"n (final)",
+      explain:"|&#916;E| = hc/&#955; = "+sci(hc/(lam*1e-9))+" J. Solve 2.18\u00d710\u207b\u00b9\u2078(1/n<sub>f</sub>&#178; &#8722; 1/"+(ni*ni)+") = |&#916;E|: 1/n<sub>f</sub>&#178; = "+(1/(nf*nf)).toFixed(4)+", so n<sub>f</sub> = <b>"+nf+"</b>.",hint:"Find |&#916;E| = hc/&#955;, then 1/n<sub>f</sub>&#178; = |&#916;E|/(2.18\u00d710\u207b\u00b9\u2078) + 1/n<sub>i</sub>&#178;, and take the square root."};}
+  // Bohr absorption from ground state: given n_f, find wavelength absorbed
+  function bohrAbsorbSpec(){var nf=pick([3,4,5]);var dE=Ry*(1-1/(nf*nf));var lam=hc/dE*1e9;
+    return {kind:"num",q:"A ground-state hydrogen atom (n = 1) absorbs a photon and its electron jumps to <b>n = "+nf+"</b>. What wavelength (nm) of light is absorbed?",answer:roundSig(lam,3),tol:roundSig(lam,3)*0.02,unit:"nm",
+      explain:"|&#916;E| = 2.18\u00d710\u207b\u00b9\u2078(1 &#8722; 1/"+(nf*nf)+") = "+sci(dE)+" J; &#955; = hc/|&#916;E| = <b>"+num(lam)+" nm</b>.",hint:"Absorption from n = 1: |&#916;E| = 2.18\u00d710\u207b\u00b9\u2078(1 &#8722; 1/n<sub>f</sub>&#178;), then &#955; = hc/|&#916;E|, \u00d710\u2079 for nm."};}
+  // quantum numbers
+  function qnSpec(kind){
+    if(kind==="orbShell"){var n=ri(2,5);return {kind:"num",q:"How many orbitals are in the <b>n = "+n+"</b> shell?",answer:n*n,tol:0.4,unit:"orbitals",explain:"Orbitals in a shell = n&#178; = "+n+"&#178; = <b>"+(n*n)+"</b>.",hint:"A shell holds n\u00b2 orbitals."};}
+    if(kind==="eShell"){var n2=ri(2,5);return {kind:"num",q:"What is the maximum number of electrons in the <b>n = "+n2+"</b> shell?",answer:2*n2*n2,tol:0.4,unit:"electrons",explain:"Max electrons = 2n&#178; = 2\u00d7"+n2+"&#178; = <b>"+(2*n2*n2)+"</b>.",hint:"A shell holds 2n\u00b2 electrons."};}
+    if(kind==="subE"){var sub=pick([[3,2,"3d"],[2,1,"2p"],[4,3,"4f"],[4,2,"4d"],[3,1,"3p"]]);return {kind:"num",q:"How many electrons can the <b class='chem'>"+sub[2]+"</b> subshell hold?",answer:2*(2*sub[1]+1),tol:0.4,unit:"electrons",explain:sub[2]+" has l="+sub[1]+", so 2(2l+1) = <b>"+(2*(2*sub[1]+1))+"</b> electrons.",hint:"A subshell holds 2(2l+1) electrons; s,p,d,f \u2192 l = 0,1,2,3."};}
+    var l=pick([1,2,3]);var lbl=LNAME[l];return {kind:"num",q:"How many orbitals are in a <b class='chem'>"+lbl+"</b> subshell?",answer:2*l+1,tol:0.4,unit:"orbitals",explain:"A "+lbl+" subshell (l="+l+") has 2l+1 = <b>"+(2*l+1)+"</b> orbitals.",hint:"Orbitals in a subshell = 2l+1."};
+  }
+  function qnValidSpec(){
+    // build 4 sets, exactly one invalid; ask which is NOT allowed
+    function valid(){var n=ri(1,4);var l=ri(0,n-1);var ml=ri(-l,l);var ms=pick(["+\u00bd","\u2212\u00bd"]);return {n:n,l:l,ml:ml,ms:ms,ok:true};}
+    function invalid(){var t=ri(0,2);var n=ri(1,3);
+      if(t===0){return {n:n,l:n,ml:0,ms:"+\u00bd",ok:false};} // l = n (too big)
+      if(t===1){var l=ri(1,n-1<1?1:n-1);return {n:Math.max(n,2),l:1,ml:2,ms:"\u2212\u00bd",ok:false};} // ml out of range
+      return {n:n,l:0,ml:0,ms:"+1",ok:false};} // ms invalid
+    var sets=[valid(),valid(),valid(),invalid()];sets=shuffle(sets);
+    var opts=sets.map(function(s){return "n="+s.n+", l="+s.l+", m\u2097="+s.ml+", m\u209b="+s.ms;});
+    var correct=0;sets.forEach(function(s,i){if(!s.ok)correct=i;});
+    return {kind:"mc",q:"Which set of quantum numbers is <b>not allowed</b>?",options:opts,correct:correct,
+      explain:"A set fails if l &#8805; n, if m\u2097 is outside &#8722;l&#8230;+l, or if m\u209b is not \u00b1&#189;. The flagged set breaks one of these.",hint:"Check each: 0 &#8804; l &#8804; n\u22121, \u2212l &#8804; m\u2097 &#8804; +l, m\u209b = \u00b1\u00bd."};
+  }
+  // electron configuration
+  function configSpec(kind){
+    if(kind==="valence"){
+      var Z=pick([3,4,5,6,7,8,9,11,12,13,14,15,16,17,19,20,31,32,33,34,35]); // main group
+      var occ=aufbau(Z);var v=valence(occ);
+      return {kind:"num",q:"How many <b>valence electrons</b> does <b>"+ZS[Z]+"</b> (Z = "+Z+") have?",answer:v,tol:0.4,unit:"electrons",
+        explain:ZS[Z]+" has "+v+" electrons in its outermost (highest-n) s and p subshells \u2192 <b>"+v+"</b>.",hint:"Count electrons in the highest-n s and p subshells."};}
+    if(kind==="unpaired"){
+      var Z2=pick([6,7,8,13,14,15,16,21,22,23,24,25,26,27,28,29,33,34]);
+      var occ2=aufbau(Z2);var u=unpaired(occ2);
+      return {kind:"num",q:"How many <b>unpaired electrons</b> are in a ground-state atom of <b>"+ZS[Z2]+"</b> (Z = "+Z2+")?",answer:u,tol:0.4,unit:"electrons",
+        explain:"Filling by Hund's rule"+(EXC[Z2]?" (with the "+ZS[Z2]+" anomaly)":"")+" leaves <b>"+u+"</b> unpaired electron"+(u===1?"":"s")+".",hint:"Fill the valence subshell singly first (Hund's rule); remember Cr and Cu are exceptions."};}
+    // block MC
+    var Z3=pick([4,7,13,17,20,22,24,26,29,31,35]);var b=blockOf(Z3);
+    var opts=["s-block","p-block","d-block","f-block"];
+    return {kind:"mc",q:"Which block of the periodic table is <b>"+ZS[Z3]+"</b> (Z = "+Z3+") in?",options:opts,correct:opts.indexOf(b+"-block"),
+      explain:ZS[Z3]+"'s highest-energy electron enters a "+b+" subshell \u2192 <b>"+b+"-block</b>.",hint:"The block is named for the subshell being filled: groups 1\u20132 = s, 13\u201318 = p, 3\u201312 = d."};
+  }
+
+  // ---------- harder generators (challenge + scaffolding) ----------
+  function laserSpec(){var lam=ri(200,650);var Pmw=ri(5,500);var t=ri(2,30);var Ephot=hc/(lam*1e-9);var n=(Pmw/1000)*t/Ephot;
+    return {kind:"num",q:"A <b class='chem'>"+lam+" nm</b> laser delivers <b class='chem'>"+Pmw+" mW</b> for <b class='chem'>"+t+" s</b>. How many photons does it emit?",answer:roundSig(n,3),tol:roundSig(n,3)*0.02,unit:"photons",
+      explain:"Energy per photon = hc/&#955; = "+sci(Ephot)+" J. Total energy = P&#183;t = "+num(Pmw/1000*t)+" J. Photons = total &#247; per-photon = <b>"+sci(n)+"</b>.",hint:"Total energy = power(W) &#215; time(s) \u2014 convert mW to W. Divide by the single-photon energy hc/&#955;."};}
+  function seriesLimitSpec(){var nf=pick([1,2,3]);var name=nf===1?"Lyman":nf===2?"Balmer":"Paschen";var lam=hc*nf*nf/Ry*1e9;
+    return {kind:"num",q:"What is the <b>shortest</b> wavelength (nm) hydrogen can emit in the <b>"+name+"</b> series (n<sub>f</sub> = "+nf+") \u2014 the series limit?",answer:roundSig(lam,3),tol:roundSig(lam,3)*0.02,unit:"nm",
+      explain:"The series limit is the n<sub>i</sub> &#8594; &#8734; drop: |&#916;E| = 2.18\u00d710\u207b\u00b9\u2078/"+(nf*nf)+" = "+sci(Ry/(nf*nf))+" J; &#955; = hc/|&#916;E| = <b>"+num(lam)+" nm</b>.",hint:"Shortest &#955; = largest &#916;E = the drop from n<sub>i</sub> = &#8734;. Then |&#916;E| = 2.18\u00d710\u207b\u00b9\u2078/n<sub>f</sub>\u00b2 and &#955; = hc/|&#916;E|."};}
+  function qnCountSpec(){var n=pick([3,4]);var mag=ri(1,n-1);var ml=mag*pick([1,-1]);var ans=2*(n-mag);var mls=(ml>0?"+"+ml:""+ml);
+    return {kind:"num",q:"In a single atom, how many electrons can have <b>n = "+n+"</b> and <b>m<sub>l</sub> = "+mls+"</b>?",answer:ans,tol:0.4,unit:"electrons",
+      explain:"m<sub>l</sub> = "+mls+" exists in every subshell with l &#8805; "+mag+", i.e. l = "+mag+"\u2026"+(n-1)+" ("+(n-mag)+" subshells). Each contributes one orbital with that m<sub>l</sub> \u2192 2 electrons: 2\u00d7"+(n-mag)+" = <b>"+ans+"</b>.",hint:"A given m<sub>l</sub> appears once in each subshell with l &#8805; |m<sub>l</sub>|. Count those (l from |m<sub>l</sub>| to n\u22121), then \u00d72 for spin."};}
+  function ionUnpairedSpec(){var pool=[[26,2],[26,3],[25,2],[24,3],[27,2],[28,2],[29,2],[23,3],[22,2],[25,3],[27,3]];var cq=pick(pool);var Z=cq[0],q=cq[1];var u=unpaired(cationOcc(Z,q));
+    return {kind:"num",q:"How many <b>unpaired electrons</b> are in a ground-state <b>"+ZS[Z]+sup(q)+"\u207a</b> ion?",answer:u,tol:0.4,unit:"electrons",
+      explain:ZS[Z]+sup(q)+"\u207a: remove "+q+" electron"+(q===1?"":"s")+" from "+ZS[Z]+" (highest-n first \u2014 4s before 3d), then apply Hund's rule \u2192 <b>"+u+"</b> unpaired.",hint:"For a transition-metal cation, strip the 4s electrons before any 3d. Then place the remaining d electrons singly (Hund)."};}
+  function configIdSpec(){var Z=pick([21,22,23,24,25,26,27,28,29,31,33,35]);var cfg=configCondensed(Z).replace(/\^(\d+)/g,function(_,d){return sup(d);});
+    var others=shuffle([Z-1,Z+1,Z-2,Z+2,Z+3,Z-3].filter(function(z){return z>=3&&z<=36&&z!==Z&&ZS[z];})).slice(0,3);
+    var set=shuffle([Z].concat(others));var opts=set.map(function(z){return ZS[z];});
+    return {kind:"mc",q:"Which neutral atom has the ground-state configuration <b class='chem'>"+cfg+"</b>?",options:opts,correct:opts.indexOf(ZS[Z]),
+      explain:"Summing the electrons in that configuration gives "+Z+", so the atom is <b>"+ZS[Z]+"</b> (Z = "+Z+").",hint:"Add the core (He=2, Ne=10, Ar=18) to the listed superscripts \u2014 the total is Z. Note Cr and Cu end in 4s\u00b9."};}
+  function ionizeFreqSpec(){var N=pick([1,2,3]);var Ej=Ry/(N*N);var nu=Ej/h;
+    return {kind:"num",q:"What is the <b>minimum frequency</b> (Hz) of a photon that can ionize a hydrogen atom already in the <b>n = "+N+"</b> level?",answer:roundSig(nu,3),tol:roundSig(nu,3)*0.02,unit:"Hz",
+      explain:"Ionization energy from n = "+N+" is 2.18\u00d710\u207b\u00b9\u2078/"+(N*N)+" = "+sci(Ej)+" J; &#957; = E/h = <b>"+sci(nu)+" Hz</b>.",hint:"Energy to ionize from level n = 2.18\u00d710\u207b\u00b9\u2078/n\u00b2. Then &#957; = E/h."};}
+
+  // ---------- fill practice ----------
+  (function(){var el=document.getElementById("pracLight");makeQuestion(el,lightSpec("l2n"));makeQuestion(el,lightSpec("n2l"));})();
+  (function(){var el=document.getElementById("pracPhoton");makeQuestion(el,photonSpec("photon"));makeQuestion(el,photonSpec("mol"));})();
+  (function(){var el=document.getElementById("pracBohr");var n=ri(2,5);makeQuestion(el,bohrEnergy(n));var nf=pick([1,2]);var ni=ri(nf+1,6);makeQuestion(el,bohrTransition(ni,nf));makeQuestion(el,bohrReverseSpec());})();
+  (function(){var el=document.getElementById("pracQN");var kinds=shuffle(["orbShell","eShell","subE","mlcount"]).slice(0,2);makeQuestion(el,qnSpec(kinds[0]));makeQuestion(el,qnSpec(kinds[1]));makeQuestion(el,qnCountSpec());makeQuestion(el,qnValidSpec());})();
+  (function(){var el=document.getElementById("pracConfig");makeQuestion(el,configSpec("valence"));makeQuestion(el,configSpec("unpaired"));makeQuestion(el,configSpec("block"));makeQuestion(el,ionUnpairedSpec());})();
+
+  // ---------- worked example: hydrogen emission line ----------
+  (function(){
+    var nf=pick([1,2,2,3]);var ni=ri(nf+1,nf+4);
+    var Eni=-Ry/(ni*ni), Enf=-Ry/(nf*nf);var dE=Ry*(1/(nf*nf)-1/(ni*ni));var lam=hc/dE;var lamnm=lam*1e9;
+    var series=nf===1?"Lyman (ultraviolet)":nf===2?"Balmer (visible)":"Paschen (infrared)";
+    document.getElementById("workedProblem").innerHTML="An electron in a hydrogen atom relaxes from <b>n = "+ni+"</b> to <b>n = "+nf+"</b>. Find the wavelength of the emitted photon, in nm, and name the spectral series.";
+    var steps=[
+      {l:"Step 1 \u00b7 Energies of the two levels",w:"E"+sup(ni)+" = \u22122.18\u00d710\u207b\u00b9\u2078/"+(ni*ni)+" = "+sci(Eni)+" J\nE"+sup(nf)+" = \u22122.18\u00d710\u207b\u00b9\u2078/"+(nf*nf)+" = "+sci(Enf)+" J",h:"E\u2099 = \u22122.18\u00d710\u207b\u00b9\u2078 J \u00f7 n\u00b2."},
+      {l:"Step 2 \u00b7 Energy of the emitted photon",w:"|\u0394E| = 2.18\u00d710\u207b\u00b9\u2078(1/"+(nf*nf)+" \u2212 1/"+(ni*ni)+") = "+sci(dE)+" J",h:"The photon carries the energy the electron loses."},
+      {l:"Step 3 \u00b7 Wavelength from E = hc/\u03bb",w:"\u03bb = hc/|\u0394E| = (1.988\u00d710\u207b\u00b2\u2075)/("+sci(dE)+") = "+sci(lam)+" m = "+num(lamnm)+" nm",h:"Rearrange E = hc/\u03bb \u2192 \u03bb = hc/E."},
+      {l:"Step 4 \u00b7 Name the series",w:"Ends at n = "+nf+" \u2192 "+series,h:"n_f = 1 Lyman (UV), 2 Balmer (visible), 3 Paschen (IR).",final:true}
+    ];
+    var host=document.getElementById("workedSteps");
+    steps.forEach(function(s){var d=document.createElement("div");d.className="wstep frag"+(s.final?" final":"");
+      d.innerHTML="<span class='lab'>"+s.l+"</span><div class='work'>"+s.w.replace(/\n/g,"<br>")+"</div><div class='hintline'>"+s.h+"</div>";host.appendChild(d);});
+  })();
+
+  // ---------- SVG schematics ----------
+  function svgWave(){
+    var s="<svg viewBox='0 0 470 150' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Light waves of two wavelengths'>";
+    function wave(y,k,col,lab){var d="M20 "+y;for(var x=0;x<=420;x+=4){var yy=y-18*Math.sin(x/ (k) );d+=" L"+(20+x)+" "+yy.toFixed(1);}s+="<path d='"+d+"' fill='none' stroke='"+col+"' stroke-width='2'/>";s+="<text x='448' y='"+(y+4)+"' font-size='10' fill='"+col+"' font-family=\"IBM Plex Mono\">"+lab+"</text>";}
+    wave(45,30,"#17708c","low &#957;");wave(110,13,"#ce2e7a","high &#957;");
+    // wavelength marker on top wave
+    s+="<line x1='20' y1='70' x2='114' y2='70' stroke='#7d9198' stroke-width='1'/><text x='55' y='84' font-size='10' fill='#4c656d' text-anchor='middle' font-family=\"IBM Plex Mono\">&#955; (long)</text>";
+    s+="<line x1='230' y1='128' x2='271' y2='128' stroke='#7d9198' stroke-width='1'/><text x='250' y='142' font-size='10' fill='#4c656d' text-anchor='middle' font-family=\"IBM Plex Mono\">&#955; (short)</text>";
+    s+="</svg>";
+    document.getElementById("waveFig").innerHTML=s+"<div class='cap'>Same speed c, different wavelengths: a longer &#955; means a lower frequency &#957;.</div>";
+  }
+  function svgBohr(){
+    var s="<svg viewBox='0 0 430 220' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Bohr energy levels and transitions'>";
+    var ys={1:200,2:150,3:118,4:98,5:84};
+    for(var n=1;n<=5;n++){s+="<line x1='60' y1='"+ys[n]+"' x2='300' y2='"+ys[n]+"' stroke='#b7ccc7' stroke-width='1.4'/><text x='40' y='"+(ys[n]+4)+"' font-size='11' fill='#4c656d' text-anchor='middle' font-family=\"IBM Plex Mono\">n="+n+"</text>";}
+    // Balmer transitions to n=2 (visible), Lyman to n=1
+    function arrow(x,n1,n2,col){s+="<line x1='"+x+"' y1='"+ys[n1]+"' x2='"+x+"' y2='"+(ys[n2]+3)+"' stroke='"+col+"' stroke-width='2'/><polygon points='"+(x-4)+","+(ys[n2]+9)+" "+(x+4)+","+(ys[n2]+9)+" "+x+","+(ys[n2]+2)+"' fill='"+col+"'/>";}
+    arrow(110,3,2,"#ce2e7a");arrow(150,4,2,"#ce2e7a");arrow(190,5,2,"#ce2e7a");
+    arrow(250,2,1,"#17708c");arrow(285,3,1,"#17708c");
+    s+="<text x='150' y='214' font-size='10' fill='#ce2e7a' text-anchor='middle' font-family=\"IBM Plex Sans\">Balmer &#8594; n=2 (visible)</text>";
+    s+="<text x='330' y='120' font-size='10' fill='#17708c' font-family=\"IBM Plex Sans\">Lyman</text><text x='330' y='134' font-size='10' fill='#17708c' font-family=\"IBM Plex Sans\">&#8594; n=1 (UV)</text>";
+    s+="</svg>";
+    document.getElementById("bohrFig").innerHTML=s+"<div class='cap'>Levels crowd together as n grows. Each downward jump emits a photon whose energy sets its wavelength.</div>";
+  }
+  function svgQM(){
+    var s="<svg viewBox='0 0 300 150' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Electron probability cloud'>";
+    s+="<defs><radialGradient id='cloud'><stop offset='0%' stop-color='#17708c' stop-opacity='0.85'/><stop offset='45%' stop-color='#17708c' stop-opacity='0.35'/><stop offset='100%' stop-color='#17708c' stop-opacity='0'/></radialGradient></defs>";
+    for(var i=0;i<120;i++){var r=Math.abs(35*Math.sin(i*2.4))+3;var ang=i*2.399;var x=150+r*Math.cos(ang);var y=75+r*Math.sin(ang);s+="<circle cx='"+x.toFixed(1)+"' cy='"+y.toFixed(1)+"' r='1.6' fill='#17708c' opacity='0.5'/>";}
+    s+="<circle cx='150' cy='75' r='55' fill='url(#cloud)'/>";
+    s+="<text x='150' y='140' font-size='10' fill='#4c656d' text-anchor='middle' font-family=\"IBM Plex Sans\">density of dots &#8776; &#968;&#178; = probability</text>";
+    s+="</svg>";
+    document.getElementById("qmFig").innerHTML=s+"<div class='cap'>An orbital is a probability cloud: &#968;&#178; is highest where the electron is most likely found.</div>";
+  }
+  function svgQN(){
+    var s="<svg viewBox='0 0 460 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Quantum number hierarchy'>";
+    function box(x,y,w,t,col){s+="<rect x='"+x+"' y='"+y+"' width='"+w+"' height='30' rx='6' fill='#fff' stroke='"+col+"'/><text x='"+(x+w/2)+"' y='"+(y+19)+"' font-size='11' fill='#15323a' text-anchor='middle' font-family=\"IBM Plex Mono\">"+t+"</text>";}
+    box(10,15,120,"n = 1, 2, 3 \u2026","#17708c");
+    box(10,70,120,"l = 0 \u2026 n\u22121","#17708c");
+    box(170,70,150,"m\u2097 = \u2212l \u2026 +l","#ce2e7a");
+    box(330,70,120,"m\u209b = \u00b1\u00bd","#a9660f");
+    box(10,125,440,"shell \u2192 subshell (s p d f) \u2192 orbital \u2192 spin","#b7ccc7");
+    s+="<line x1='70' y1='45' x2='70' y2='70' stroke='#b7ccc7'/><line x1='130' y1='85' x2='170' y2='85' stroke='#b7ccc7'/><line x1='320' y1='85' x2='330' y2='85' stroke='#b7ccc7'/>";
+    s+="</svg>";
+    document.getElementById("qnFig").innerHTML=s+"<div class='cap'>Each electron is labelled by four quantum numbers; the Pauli principle forbids two electrons sharing all four.</div>";
+  }
+  function svgOrb(){
+    var s="<svg viewBox='0 0 460 140' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='s, p, and d orbital shapes'>";
+    // s sphere
+    s+="<circle cx='70' cy='60' r='30' fill='#17708c' opacity='0.28' stroke='#17708c'/><text x='70' y='120' font-size='12' fill='#15323a' text-anchor='middle' font-family=\"IBM Plex Mono\">s</text>";
+    // p dumbbell
+    s+="<ellipse cx='195' cy='40' rx='16' ry='26' fill='#ce2e7a' opacity='0.3' stroke='#ce2e7a'/><ellipse cx='195' cy='80' rx='16' ry='26' fill='#ce2e7a' opacity='0.3' stroke='#ce2e7a'/><text x='195' y='120' font-size='12' fill='#15323a' text-anchor='middle' font-family=\"IBM Plex Mono\">p</text>";
+    // d cloverleaf
+    var cx=340,cy=60;[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(o){s+="<ellipse cx='"+(cx+o[0]*20)+"' cy='"+(cy+o[1]*20)+"' rx='13' ry='22' transform='rotate("+(o[0]*o[1]>0?45:-45)+" "+(cx+o[0]*20)+" "+(cy+o[1]*20)+")' fill='#0d5063' opacity='0.28' stroke='#0d5063'/>";});
+    s+="<text x='340' y='120' font-size='12' fill='#15323a' text-anchor='middle' font-family=\"IBM Plex Mono\">d</text>";
+    s+="</svg>";
+    document.getElementById("orbFig").innerHTML=s+"<div class='cap'>s (1 orbital, spherical), p (3 orbitals, dumbbells), d (5 orbitals, cloverleaf).</div>";
+  }
+  function svgAuf(){
+    var rows=[["1s"],["2s","2p"],["3s","3p","3d"],["4s","4p","4d","4f"],["5s","5p","5d"],["6s","6p"],["7s"]];
+    var s="<svg viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Aufbau diagonal filling order'>";
+    var cellw=58,cellh=26,x0=20,y0=16;
+    for(var r=0;r<rows.length;r++){for(var cc=0;cc<rows[r].length;cc++){var x=x0+cc*cellw,y=y0+r*cellh;s+="<rect x='"+x+"' y='"+y+"' width='48' height='20' rx='4' fill='#eef4f6' stroke='#b7ccc7'/><text x='"+(x+24)+"' y='"+(y+14)+"' font-size='11' fill='#15323a' text-anchor='middle' font-family=\"IBM Plex Mono\">"+rows[r][cc]+"</text>";}}
+    // diagonal arrows
+    for(var k=1;k<=6;k++){var sx=x0+ (k)*cellw -6, sy=y0-2; var ex=x0-6, ey=y0+(k)*cellh+10; s+="<line x1='"+Math.min(sx,300)+"' y1='"+sy+"' x2='"+ex+"' y2='"+ey+"' stroke='#ce2e7a' stroke-width='1' opacity='0.55'/>";}
+    s+="<text x='250' y='150' font-size='10.5' fill='#ce2e7a' font-family=\"IBM Plex Sans\">follow the</text><text x='250' y='165' font-size='10.5' fill='#ce2e7a' font-family=\"IBM Plex Sans\">diagonals \u2198</text>";
+    s+="</svg>";
+    document.getElementById("aufFig").innerHTML=s+"<div class='cap'>Aufbau order: 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d \u2026 \u2014 fill along each diagonal.</div>";
+  }
+  function svgPT(){
+    var cell=22,gap=3,padL=30,padT=34;
+    function has(p,g){if(p===1)return g===1||g===18;if(p===2||p===3)return g===1||g===2||(g>=13&&g<=18);if(p>=4&&p<=7)return g>=1&&g<=18;return false;}
+    function block(p,g){if(g>=3&&g<=12)return "d";if(g>=13)return (p===1&&g===18)?"s":"p";return "s";}
+    var fill={s:"#cfe3ea",p:"#f6dcec",d:"#e7efd9",f:"#efe6d6"};var stroke={s:"#17708c",p:"#ce2e7a",d:"#5a8a2e",f:"#a9660f"};
+    var W=padL+18*(cell+gap)+8,H=padT+7*(cell+gap)+64;
+    var svg="<svg viewBox='0 0 "+W+" "+H+"' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Periodic table by block'>";
+    for(var g=1;g<=18;g++)svg+="<text x='"+(padL+(g-1)*(cell+gap)+cell/2)+"' y='"+(padT-8)+"' font-size='8' fill='#7d9198' text-anchor='middle' font-family=\"IBM Plex Mono\">"+g+"</text>";
+    for(var p=1;p<=7;p++){svg+="<text x='"+(padL-10)+"' y='"+(padT+(p-1)*(cell+gap)+cell/2+3)+"' font-size='8' fill='#7d9198' text-anchor='middle' font-family=\"IBM Plex Mono\">"+p+"</text>";
+      for(var gg=1;gg<=18;gg++){if(!has(p,gg))continue;var b=block(p,gg);var x=padL+(gg-1)*(cell+gap),y=padT+(p-1)*(cell+gap);svg+="<rect x='"+x+"' y='"+y+"' width='"+cell+"' height='"+cell+"' rx='3' fill='"+fill[b]+"' stroke='"+stroke[b]+"' stroke-width='1'/>";}}
+    var fy=padT+7*(cell+gap)+8;svg+="<rect x='"+(padL+2*(cell+gap))+"' y='"+fy+"' width='"+(14*(cell+gap)-gap)+"' height='"+cell+"' rx='3' fill='"+fill.f+"' stroke='"+stroke.f+"'/><text x='"+(padL+2*(cell+gap)+8)+"' y='"+(fy+15)+"' font-size='9' fill='#7a5a1a' font-family=\"IBM Plex Sans\">f-block (lanthanides &amp; actinides)</text>";
+    var ly=fy+cell+18,items=[["s-block","#cfe3ea","#17708c"],["p-block","#f6dcec","#ce2e7a"],["d-block","#e7efd9","#5a8a2e"],["f-block","#efe6d6","#a9660f"]];
+    items.forEach(function(it,i){var xx=padL+i*100;svg+="<rect x='"+xx+"' y='"+(ly-9)+"' width='12' height='12' rx='2' fill='"+it[1]+"' stroke='"+it[2]+"'/><text x='"+(xx+17)+"' y='"+(ly+1)+"' font-size='9.5' fill='#4c656d' font-family=\"IBM Plex Sans\">"+it[0]+"</text>";});
+    svg+="</svg>";
+    document.getElementById("ptFig").innerHTML=svg+"<div class='cap'>The table is a filling map: each region marks the subshell (s, p, d, f) receiving the outermost electron.</div>";
+  }
+  svgWave();svgBohr();svgQM();svgQN();svgOrb();svgAuf();svgPT();
+
+  // ---------- challenge (10 hard) ----------
+  function challengeSpecs(){
+    return [
+      laserSpec(),          // 1 · photon counting (power × time)
+      seriesLimitSpec(),    // 2 · Bohr series limit (n→∞)
+      photonSpec("mol"),    // 3 · energy of a mole of photons
+      bohrReverseSpec(),    // 4 · reverse Bohr: find n_f from emitted wavelength
+      qnValidSpec(),        // 5 · which set of quantum numbers is not allowed
+      qnCountSpec(),        // 6 · electrons with fixed n and m_l
+      ionUnpairedSpec(),    // 7 · unpaired electrons in a transition-metal cation
+      configIdSpec(),       // 8 · identify element from condensed configuration
+      ionizeFreqSpec(),     // 9 · threshold frequency to ionize from level n
+      bohrAbsorbSpec()      // 10 · capstone: absorption wavelength from the ground state
+    ];
+  }
+
+  var solvedCount=0,TOTAL_CH=10;
+  (function(){
+    var list=document.getElementById("challengeList");var prog=document.getElementById("chProg"),mini=document.getElementById("chMini"),gate=document.getElementById("chGate");
+    var specs=challengeSpecs();
+    specs.forEach(function(sp,i){if(!/^Q\d/.test(sp.q.replace(/<[^>]+>/g,"")))sp.q="<span class='q-num'>Q"+(i+1)+"</span>"+sp.q;
+      makeQuestion(list,sp,{allowShow:false,onSolved:function(ok){if(ok){solvedCount++;update();}}});});
+    function update(){prog.textContent=solvedCount+" / "+TOTAL_CH+" solved";var t=solvedCount/TOTAL_CH;mini.style.width=(t*100)+"%";
+      mini.style.background="rgb("+Math.round(23+(206-23)*t)+","+Math.round(112+(46-112)*t)+","+Math.round(140+(122-140)*t)+")";
+      if(solvedCount>=TOTAL_CH){gate.className="gate ready";gate.innerHTML="<b>All ten solved.</b> Your completion pass is unlocked \u2014 <button class='btn pink' id='toPass'>Open completion pass \u2192</button>";
+        document.getElementById("toPass").addEventListener("click",function(){goto(idxOf("sComplete"));});unlockCompletion();}}
+    update();
+  })();
+
+  // ---------- completion ----------
+  function fnv(str){var h=2166136261>>>0;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+  var completionReady=false;
+  function unlockCompletion(){completionReady=true;document.getElementById("compTitle").textContent="Chapter 7 complete";document.getElementById("compLocked").hidden=true;document.getElementById("compReady").hidden=false;}
+  document.getElementById("compGen").addEventListener("click",function(){
+    if(!completionReady)return;var name=(document.getElementById("compName").value||"").trim();if(!name){document.getElementById("compName").focus();return;}
+    var when=new Date();var sessionId=seed.toString(36).toUpperCase();var code=fnv(seed+"|"+name.toLowerCase()+"|10").toString(36).toUpperCase().slice(0,6);
+    document.getElementById("passWrap").innerHTML=
+      "<div class='pass'><div class='head'><div class='k'>Duquesne \u00b7 General Chemistry I</div><div class='big'>Chapter 7 \u2014 Quantum Theory and the Electronic Structure of Atoms</div></div>"+
+      "<div class='body'>"+
+      "<div class='row'><span class='lab'>Name</span><span class='val'>"+name.replace(/</g,"&lt;")+"</span></div>"+
+      "<div class='row'><span class='lab'>Result</span><span class='val'>10 / 10 solved \u2713</span></div>"+
+      "<div class='row'><span class='lab'>Completed</span><span class='val'>"+when.toLocaleString()+"</span></div>"+
+      "<div class='row'><span class='lab'>Session ID</span><span class='val'>"+sessionId+"</span></div>"+
+      "<div class='row'><span class='lab'>Verification</span><span class='val code'>"+code+"</span></div>"+
+      "</div></div><p class='note'>Screenshot the pass above and hand it to your instructor.</p>";
+    document.getElementById("passWrap").scrollIntoView({behavior:"smooth",block:"nearest"});
+  });
+
+  // ---------- slide engine ----------
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,cur=0;
+  var pfill=document.getElementById("pfill"),counter=document.getElementById("counter");
+  var mst=document.getElementById("mst"),msn=document.getElementById("msn");
+  var prevBtn=document.getElementById("prev"),nextBtn=document.getElementById("next");
+  function idxOf(id){for(var i=0;i<slides.length;i++){if(slides[i].id===id)return i;}return 0;}
+  function frags(i){return Array.prototype.slice.call(slides[i].querySelectorAll(".frag"));}
+  function shownN(i){return frags(i).filter(function(f){return f.classList.contains("shown");}).length;}
+  function render(){slides.forEach(function(s,i){s.classList.toggle("active",i===cur);});
+    var t=total>1?cur/(total-1):0;pfill.style.width=((cur+1)/total*100)+"%";
+    pfill.style.background="rgb("+Math.round(23+(206-23)*t)+","+Math.round(112+(46-112)*t)+","+Math.round(140+(122-140)*t)+")";
+    counter.textContent=(cur+1)+" / "+total;mst.textContent=slides[cur].dataset.st||"";msn.textContent=slides[cur].dataset.name||"";
+    prevBtn.disabled=(cur===0&&shownN(cur)===0);nextBtn.disabled=(cur===total-1&&shownN(cur)===frags(cur).length);}
+  function fwd(i){frags(i).forEach(function(f){f.classList.remove("shown");});}
+  function back(i){frags(i).forEach(function(f){f.classList.add("shown");});}
+  function goto(i){cur=Math.max(0,Math.min(total-1,i));fwd(cur);render();document.getElementById("stage").scrollTop=0;}
+  function next(){var fr=frags(cur),sn=shownN(cur);if(sn<fr.length){fr[sn].classList.add("shown");render();return;}if(cur<total-1){cur++;fwd(cur);render();document.getElementById("stage").scrollTop=0;}}
+  function prev(){var sn=shownN(cur);if(sn>0){frags(cur)[sn-1].classList.remove("shown");render();return;}if(cur>0){cur--;back(cur);render();document.getElementById("stage").scrollTop=0;}}
+  nextBtn.addEventListener("click",next);prevBtn.addEventListener("click",prev);
+  document.addEventListener("keydown",function(e){var tag=(document.activeElement&&document.activeElement.tagName)||"";if(tag==="INPUT"||tag==="TEXTAREA")return;
+    if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();next();}
+    else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();prev();}
+    else if(e.key==="Home"){goto(0);}else if(e.key==="End"){cur=total-1;back(cur);render();}});
+  document.getElementById("reroll").addEventListener("click",function(){location.reload();});
+  document.getElementById("fsBtn").addEventListener("click",function(){try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen();}catch(e){}});
+
+  fwd(0);render();
+})();
+</script>
+</body>
+</html>
